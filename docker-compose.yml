@@ -1,0 +1,92 @@
+version: "3"
+
+volumes: # 自定义数据卷，默认位于宿主机/var/lib/docker/volumes内
+  blogproject_mysql_vol: # 定义数据卷同步容器内mysql数据
+  blogproject_media_vol: # 定义数据卷同步media文件夹数据
+  blogproject_redis_vol:
+  esdata:
+
+services:
+  db-mysql:
+    image: mysql:5.7.18
+    environment:
+      - "MYSQL_ROOT_PASSWORD=Hwt123456!"
+      - "MYSQL_DATABASE=blogproject"
+    volumes:  
+      - ./apps/mysql/mydir:/mydir
+      - ./apps/mysql/datadir:/var/lib/mysql
+      - ./apps/mysql/conf/my.cnf:/etc/my.cnf
+      # 数据库还原目录 可将需要还原的sql文件放在这里
+      - ./apps/mysql/source:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306" # 与配置文件保持一致
+    restart: always
+ 
+  web:
+    build: ./blogproject  # 使用blogproject目录下的Dockerfile
+    expose:
+      - "8000"
+    volumes:
+      - ./blogproject:/var/www/html/blogproject  # 挂载项目代码
+      - blogproject_media_vol:/var/www/html/blogproject/media  # 以数据卷挂载容器内用户上传媒体文件
+      # - ./compose/uwsgi:/tmp  # 挂载uwsgi日志
+    links:
+      - db-mysql
+    depends_on:  # 依赖关系
+      - db-mysql
+      - elasticsearch
+      - redis
+    environment:
+      - DEBUG=False
+      - SECRET_KEY='pt@51_m6vpsaegtttguk28h60xml6!$igqjkjtm(bvuo0j4w'
+    restart: always
+    tty: true
+    stdin_open: true
+
+  nginx:
+    build: ./compose/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - "80"
+    volumes:  # 可以在此处指定日志目录，将docker容器内的日志路径映射到本地
+      - ./blogproject/static:/usr/share/nginx/html/static  # 挂载静态文件
+      - ./compose/nginx/ssl:/usr/share/nginx/ssl  # 挂载ssl证书目录
+      - ./compose/nginx/log:/var/log/nginx  # 挂载日志
+      - blogproject_media_vol:/usr/share/nginx/html/media  # 挂载用户上传媒体文件
+    links:
+      - web
+    depends_on:
+      - web
+    restart: always
+  
+  redis:
+    image: redis
+    volumes:
+       - blogproject_redis_vol:/var/www/html/blogproject/redis/data # 通过挂载给redis数据备份
+       - ./compose/redis/redis.conf:/etc/redis/redis.conf # 挂载redis配置文件
+    ports:
+      - "6379:6379"
+    restart: always
+   
+  elasticsearch:
+    build:
+      context: .
+      dockerfile: ./compose/elasticsearch/Dockerfile
+    image: dh_elasticsearch
+    container_name: dh_elasticsearch
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nproc: 65536
+      nofile:
+        soft: 65536
+        hard: 65536

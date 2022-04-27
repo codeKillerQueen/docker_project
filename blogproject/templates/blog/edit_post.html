@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load blog_extras %}
+
+{% block main %}
+
+
+<style type="text/css">
+	label{
+		font-size: 18px;
+	}
+	.id_author{
+		font-size: 10px;
+	}
+	/* input{
+		width: 20;
+		height: auto;
+	} */
+	input{
+		margin: 5px;
+	    outline-style: none ;
+	    border: 1px solid #ccc; 
+	    border-radius: 3px;
+	    padding: 8px 8px;
+	    width: 620px;
+	    font-size: 15px;
+	}
+	input:focus{
+	    border-color: #e9c3d2;
+	    outline: 0;
+	    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	}
+	#id_tags{
+		width: 350px;
+	}
+	textarea{
+		/* outline-style: none ; */
+		margin: 5px;
+		float: none;
+		border: 1px solid #ccc; 
+		border-radius: 3px;
+		padding: 10px 10px;
+		font-size: 15px;
+	}
+	textarea:focus{
+	    border-color: #99d18f;
+	    outline: 0;
+	    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	}
+	select{
+		margin: 5px;
+		outline-style: none ;
+		border: 1px solid #ccc; 
+		border-radius: 3px;
+		padding: 8px 8px;
+		width: 200px;
+		font-size: 15px;
+	}
+	select:focus{
+	    border-color: #99d18f;
+	    outline: 0;
+	    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	}
+	
+	#id_btn{
+		margin-top: 8px;
+		/* margin-left: 200px; */
+
+		color: #000000;
+		width: 180px;
+		height: 60px;
+		font-size: 20px;
+		
+		background-color: rgba(255, 255, 255, 0.4);
+		border: 1px solid #ccc;
+		-webkit-transition-duration: 0.6s; /* Safari */
+		transition-duration: 0.6s;
+	}
+	#id_btn:hover {
+	    background-color: #a9d06b; 
+	    color: white;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(118, 176, 123, 0.6);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(118, 176, 123, 0.6);
+	}
+	
+	#id_author{
+		font-size: 20px;
+		transition-duration: 0.4s;
+	}
+	#id_author:link { color: #000000; text-decoration: none; }/* 未访问的链接 */
+	#id_author:visited { color: #000000;  } /* 已访问的链接 */
+	#id_author:hover { color: #6d6d6d;  }/* 鼠标移动到链接上 */
+	#id_author:active { color: #6d6d6d; } /* 选定的链接 */
+	
+	#id-title{
+		font-size: 20px;
+	}
+
+</style>
+
+<!-- <form action="/api/editpost/" method="POST" class="post-form"> -->
+<form method="POST" class="post-form">
+	{% if msg %}
+	<div class="alert alert-warning">{{ msg }}</div>
+	{% endif %}
+
+	{% csrf_token %}
+	
+	{% if request.session.user_id|safe == form.author.value|safe %}
+	
+		<div>
+			<div class="col-md-14">
+				<label style="font-size: 25px;">修改你的文章： </label>
+				<a href="#" id="id-title">{{ form.title.value }}</a>
+				<p>（目前只支持修改正文和分类哦！）</p>
+			</div>
+			
+			<!-- {{ form }} -->
+			<!-- {{ form.body }} -->
+			<!-- {% for item in form %}
+				{% if item.name|safe != 'author' and item.name|safe != 'title' %}
+					  <div class="col-md-14">
+						<label >{{ item.label_tag }}</label>
+			
+						  {{ item }}
+						  {{ item.errors }}
+
+					  </div>
+				{% endif %}
+			{% endfor %} -->
+			
+			<!-- <div class="card-body">
+			    {{ form.as_ul }}
+			  </div> -->
+
+
+				
+	<!-- 		{{ form.title }}
+			{{ form.body }} -->
+			<div class="col-md-14">
+				<label for="id_body">正文： </label>
+				<textarea type="body" name='body' id="id_body"
+					onkeydown="on_return()" cols="82" rows="25" >{{ form.body.value }}</textarea>
+			</div>
+			<div class="col-md-14">
+				<label for="id_category">分类： </label>
+				<!-- {{ form.category }} -->
+				<select name="category" id="id_category">
+					{% for category in categories %}
+						{% if category.id|safe == form.category.value|safe %}
+							<option value={{ category.name }} selected>{{ category.name }}</option>
+						{% else %}
+							<option value={{ category.name }}>{{ category.name }}</option>
+						{% endif %}
+					{% endfor %}
+					<span class="glyphicon  form-control-feedback"></span>
+				</select>
+			</div>
+			<!-- <div class="col-md-14">
+				<label for="id_tags">标签： </label>
+				<input type="tags" name='tags' value="{{ form.tags.value }}" id="id_tags" onkeydown="on_return()" width="5" height="10">
+				<span class="glyphicon  form-control-feedback"></span>
+			</div> -->
+			
+			<button type="submit" class="post-btn btn btn-primary btn-flat" id="id_btn">提交咯</button>
+			
+			<div>
+				<p style="margin-top: 15px;">本人懒得改样式了，直接摆烂，将就看吧……</p>
+			</div>
+			
+		</div>
+		
+	{% else %}
+	<h1>无编辑权限！</h1>
+<!-- 	<a href="#">{{ request.session.user_id }}</a>
+	<a href="#">{{ form.author.value }}</a> -->
+	{% endif %}
+
+</form>
+
+
+
+{% endblock main %}

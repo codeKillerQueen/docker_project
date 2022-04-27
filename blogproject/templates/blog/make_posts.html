@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load blog_extras %}
+
+{% block main %}
+{% if request.session.is_login %}
+
+<style type="text/css">
+	label{
+		font-size: 18px;
+	}
+	.id_author{
+		font-size: 10px;
+	}
+	/* input{
+		width: 20;
+		height: auto;
+	} */
+	input{
+		margin: 5px;
+	    outline-style: none ;
+	    border: 1px solid #ccc; 
+	    border-radius: 3px;
+	    padding: 8px 8px;
+	    width: 620px;
+	    font-size: 15px;
+	}
+	input:focus{
+	    border-color: #99d18f;
+	    outline: 0;
+	    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	}
+	#id_tags{
+		width: 350px;
+	}
+	textarea{
+		/* outline-style: none ; */
+		margin: 5px;
+		float: none;
+		border: 1px solid #ccc; 
+		border-radius: 3px;
+		padding: 10px 10px;
+		font-size: 15px;
+	}
+	textarea:focus{
+	    border-color: #99d18f;
+	    outline: 0;
+	    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	}
+	select{
+		margin: 5px;
+		outline-style: none ;
+		border: 1px solid #ccc; 
+		border-radius: 3px;
+		padding: 8px 8px;
+		width: 200px;
+		font-size: 15px;
+	}
+	select:focus{
+	    border-color: #99d18f;
+	    outline: 0;
+	    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(177, 235, 167, 0.6);
+	}
+	
+	#id_btn{
+		margin-top: 8px;
+		/* margin-left: 200px; */
+
+		color: #000000;
+		width: 180px;
+		height: 60px;
+		font-size: 20px;
+		
+		background-color: rgba(255, 255, 255, 0.4);
+		border: 1px solid #ccc;
+		-webkit-transition-duration: 0.6s; /* Safari */
+		transition-duration: 0.6s;
+	}
+	#id_btn:hover {
+	    background-color: #a9d06b; 
+	    color: white;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(118, 176, 123, 0.6);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(118, 176, 123, 0.6);
+	}
+	
+	#id_author{
+		font-size: 20px;
+		transition-duration: 0.4s;
+	}
+	#id_author:link { color: #000000; text-decoration: none; }/* 未访问的链接 */
+	#id_author:visited { color: #000000;  } /* 已访问的链接 */
+	#id_author:hover { color: #6d6d6d;  }/* 鼠标移动到链接上 */
+	#id_author:active { color: #6d6d6d; } /* 选定的链接 */
+
+</style>
+
+<form action="/api/makeposts/" method="POST" class="post-form">
+	{% if msg %}
+	<div class="alert alert-warning">{{ msg }}</div>
+	{% endif %}
+
+	{% csrf_token %}
+	<div>
+		<div class="col-md-14">
+			<label style="font-size: 25px;">发布文章</label>
+		</div>
+		
+		<div class="col-md-14" style="margin-top: 10px;">
+			<label for="id_author">我知道你是： </label>
+			<a href="#" name="author" id="id_author" style="font-size: 20px;);"> {{ request.session.user_name }} </a>
+			<!-- <input type="id_author" name='author' class="form-control" id="id_author" placeholder="用户名"
+				onkeydown="on_return()" value="{{ request.session.user_name }}" style="border:none;outline:none;"> -->
+			<span class="glyphicon  form-control-feedback"></span>
+		</div>
+
+		<div class="col-md-14">
+			<label for="id_title">标题： </label>
+			<!-- class="form-control" -->
+			<input type="title" name='title'  placeholder="一篇很不错的文章" id="id_title"
+				onkeydown="on_return()" width="10" height="10">
+			<span class="glyphicon  form-control-feedback"></span>
+		</div>
+
+		<div class="col-md-14">
+			<label for="id_body">正文： </label>
+			<!-- class="form-control" -->
+			<textarea type="body" name='body'  placeholder="我为长者+1s" id="id_body"
+				onkeydown="on_return()" cols="82" rows="25" ></textarea>
+		</div>
+
+		<div class="col-md-14">
+			<label for="id_category">分类：  </label>
+			<select name="category" id="id_category">
+				<option value="请选择">请选择</option>
+
+				{% for category in categories %}
+				<option value={{ category.name }}>{{ category.name }}</option>
+				{% endfor %}
+
+				<span class="glyphicon  form-control-feedback"></span>
+			</select>
+		</div>
+		
+		<div class="col-md-14">
+			<label for="id_tags">标签： </label>
+			<!-- class="form-control" -->
+			<input type="tags" name='tags'  placeholder="用空格分隔" id="id_tags" onkeydown="on_return()" width="5" height="10">
+			<span class="glyphicon  form-control-feedback"></span>
+		</div>
+		
+		<button type="submit" class="post-btn btn btn-primary btn-flat" id="id_btn">提交咯</button>
+		
+		<div>
+			<p style="margin-top: 15px;">本人懒得改样式了，直接摆烂，将就看吧……</p>
+		</div>
+		
+
+	</div>
+	
+<!-- 	<div class="row">
+		btn-block
+		<button type="submit" class="post-btn btn btn-primary  btn-flat">提交咯</button>
+	</div> -->
+
+
+
+</form>
+
+
+
+{% else %}
+<h1>你尚未登录，只能访问公开内容！</h1>
+{% endif %}
+
+{% endblock main %}

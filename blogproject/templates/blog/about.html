@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+
+
+
+{% block main %}
+{% if request.session.is_login %}
+<!-- <h1>你好,{{ request.session.user_name }}！欢迎回来！</h1>
+ -->
+ {% if message %}
+ <div class="alert alert-warning">{{ message }}</div>
+ {% endif %}
+
+<style type="text/css">
+	#id-about-content p{
+		font-size: 16px;
+		line-height:30px;
+	}
+	#id-about-content h3{
+		padding-bottom: 10px;
+	}
+</style>
+
+<div id="id-about-content">
+	<h3>关于我</h3>
+	<p>我是HWT，是豆豆，是瑞瑞，也有人叫我素芬，来自四川成都</p>
+	<p>一个不专业的电子专业生，还想着狠狠搞电脑，家有两萌娃，悠米和卡布</p>
+	<p>同时更是社会主义接班人、坚定的无产阶级斗士</p>
+	<p>-->> </p>
+<!-- 	<p>GitHub: https://github.com/codeKillerQueen （纯纯用来找项目的，栓q）</p>
+	<p>bilibili: Aphrora- （偶尔会发一些拍猫屁股视频，给个三连栓q）</p> -->
+	<a href="https://github.com/codeKillerQueen" target="_blank">GitHub（纯纯用来找项目的，栓q</a><p></p>
+	<a href="https://space.bilibili.com/9139708" target="_blank">bilibili（偶尔会发一些拍猫屁股视频，给个三连栓q</a>
+	
+	
+	<div style="padding: 35px;">
+		<!-- <hr align=left width=500> -->
+		<hr style="border:1 dashed #987cb9" width="80%"color=#987cb9 size=1>
+	</div>
+	
+	<h3>关于DOUBLE H</h3>
+	<p>建立此博客的本意在于学习有趣的django框架，也有幸能够借助黄同学的服务器得以上线，最终呈现在大家面前。“DOUBLE H”这个博客名也取自我和黄同学的姓氏（哈哈哈哈，俺随便取的！</p>
+	<p>DOUBLE H并不完美，她有着许多小瑕疵，是前端懂一点、后端懂一点的我，东拼西凑成了这个拼多多版的个人博客，但这也是我作为一个初学者的全部心血了</p>
+
+	<p>从现在开始，我和黄同学会一直维护DOUBLE H，努力实现一个我们好朋友间的wonderland</p>
+	<p>这里欢迎我们的好朋友们，希望大家能在这里玩得愉快，也希望大家都能身体健康、事事顺心、开开心心地过好每一天！耶！</p>
+	
+	<div style="padding: 35px;">
+		<!-- <hr align=left width=500> -->
+		<hr style="border:1 dashed #987cb9" width="80%"color=#987cb9 size=1>
+	</div>
+	
+	<h3>意见和建议</h3>
+	<p>你是DOUBLE H的彩钻贵族用户，也是尊贵的测试员，如果你在使用过程中遇到任何问题，或者有任何感受，欢迎随时联系我们捏</p>
+	<p>你可以通过发帖、评论的方式给出你的宝贵建议，当然，也可以直接微信滴滴</p>
+	<p>我们非常感谢你的参与和帮助！</p>
+	
+</div>
+
+
+{% else %}
+<h1>请先<a href="{% url 'blog:to_login' %}">登录</a>！</h1>
+{% endif %}
+{% endblock main %}

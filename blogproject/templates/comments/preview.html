@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load comments_extras %}
+
+{% block main %}
+{% show_comment_form post form request.session.user_name %}
+{% endblock main %}
+
+

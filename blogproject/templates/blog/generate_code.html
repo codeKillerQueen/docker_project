@@ -1,0 +1,105 @@
+{% load static %}
+{% load blog_extras %}
+
+{% if request.session.user_name == 'hwt' %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- <title>DOUBLE H | LOGIN</title> -->
+		<title>DOUBLE H</title>
+
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+
+		<link rel="stylesheet" href="{% static 'blog/cdnjs/twitter-bootstrap/3.3.7/css/bootstrap.min.css' %}">
+
+		<link rel="stylesheet" href="{% static 'blog/cdnjs/font-awesome/4.7.0/css/font-awesome.min.css' %}">
+
+
+		<link rel="stylesheet" href="{% static 'blog/cdnjs/admin-lte/2.4.8/css/AdminLTE.min.css' %}">
+
+		<script src="{% static 'blog/cdnjs/jquery/3.5.0/jquery.min.js' %}"></script>
+
+		<script src="{% static 'blog/cdnjs/twitter-bootstrap/3.3.7/js/bootstrap.min.js' %}"></script>
+
+
+		<link rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+	</head>
+	<body class="hold-transition login-page" style="overflow-y:hidden">
+		<div class="login-box">
+			<div class="login-logo">
+				<a href="#" style="color:#32779f"><b>DOUBLE H </b>- MANAGE</a>
+			</div>
+
+			<form class='form-invitecode' action="/api/generatecode/" method="POST">
+				{% if msg %}
+				<div class="alert alert-warning">{{ msg }}</div>
+				{% endif %}
+				{% csrf_token %}
+
+				<div class="login-box-body text-center">
+					<p class="login-box-msg">only for manager to generate some invite codes</p>
+
+					<div>
+						<div class="form-group has-feedback">
+							<input type="invitecode" name='invitecode' class="form-control" id="invitecode" placeholder="邀请码"
+								onkeydown="on_return()" value="{% show_code %}" readonly> 
+							<span class="form-control-feedback"></span>
+						</div>
+						<!-- <div class="form-group has-feedback">
+							
+						</div> -->
+						
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<button type="submit" class="btn btn-primary btn-block btn-flat "
+								onclick="postLoginRequest()">GOT IT ! & INPUT A NEW INVITE CODE</button>
+							</div>
+						</div>
+						
+						<!-- <div class="form-group has-feedback">
+							<div class="row">
+								<div class="col-xs-12">
+									<div  class="btn btn-primary btn-block btn-flat "
+									onclick="postLoginRequest()">SHOW INVITE CODE</div>
+								</div>
+							
+							</div>
+							<input type="show_invitecode" name='show_invitecode' class="form-control" id="show_invitecode" placeholder="有效邀请码"
+								onkeydown="on_return()" value="{% show_code %}">
+
+							<span class="form-control-feedback"></span>
+						</div> -->
+
+						
+					</div>
+
+					<div class="social-auth-links text-center">
+
+					</div>
+
+					<!-- <a href="{% url 'blog:register' %}" class="text-center">NEW HERE? CLICK TO RESIST!</a> -->
+
+
+				</div>
+
+			</form>
+
+		</div>
+
+
+
+	</body>
+
+
+
+</html>
+
+{% else %}
+<h1>您无权访问！</h1>
+
+{% endif %}

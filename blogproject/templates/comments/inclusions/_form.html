@@ -1,0 +1,39 @@
+<style type="text/css">
+	#id-comment-btn{
+		-webkit-transition-duration: 0.6s; /* Safari */
+		transition-duration: 0.6s;
+	}
+	#id-comment-btn:hover{
+		background-color: #a9d06b;
+		color: white;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(118, 176, 123, 0.6);
+		box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(118, 176, 123, 0.6);
+	}
+</style>
+
+<form action="{% url 'comments:comment' post.pk %}" method="post" class="comment-form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-4">
+            <label for="{{ form.name.id_for_label }}">已登录： </label>
+            <a href="#"> {{ user_name }} </a>
+            <!-- {{ form.name.errors }} -->
+        </div>
+        <!-- <div class="col-md-4">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}：</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div> -->
+        <!-- <div class="col-md-4">
+            <label for="{{ form.url.id_for_label }}">{{ form.url.label }}：</label>
+            {{ form.url }}
+            {{ form.url.errors }}
+        </div> -->
+        <div class="col-md-12">
+            <label for="{{ form.text.id_for_label }}">我想说： </label>
+            {{ form.text }}
+            {{ form.text.errors }}
+            <button type="submit" class="comment-btn" id="id-comment-btn">提交咯</button>
+        </div>
+    </div>    <!-- row -->
+</form>

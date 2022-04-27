@@ -1,0 +1,139 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- <title>DOUBLE H | LOGIN</title> -->
+		<title>DOUBLE H</title>
+
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+
+		<link rel="stylesheet" href="{% static 'blog/cdnjs/twitter-bootstrap/3.3.7/css/bootstrap.min.css' %}">
+
+		<link rel="stylesheet" href="{% static 'blog/cdnjs/font-awesome/4.7.0/css/font-awesome.min.css' %}">
+
+
+		<link rel="stylesheet" href="{% static 'blog/cdnjs/admin-lte/2.4.8/css/AdminLTE.min.css' %}">
+
+		<script src="{% static 'blog/cdnjs/jquery/3.5.0/jquery.min.js' %}"></script>
+
+		<script src="{% static 'blog/cdnjs/twitter-bootstrap/3.3.7/js/bootstrap.min.js' %}"></script>
+		
+		<link rel="shortcut icon" href="{% static 'blog/favicon.png' %}" type="image/png" >
+
+
+		<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+		<link rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+	</head>
+	<body class="hold-transition login-page" style="overflow-y:hidden">
+		<div class="login-box">
+			<div class="login-logo">
+				<a href="#" style="color:#32779f"><b>DOUBLE H </b>- LOGIN</a>
+			</div>
+
+<form class='form-login' action="/api/login/" method="POST">
+{% if msg %}
+                    <div class="alert alert-warning">{{ msg }}</div>
+                {% endif %}
+  {% csrf_token %}
+
+			<div class="login-box-body text-center">
+				<p class="login-box-msg">please enter your registed name and password</p>
+
+				<div>
+					<div class="form-group has-feedback">
+						
+						<input type="username" name='username' class="form-control" id="username" placeholder="用户名"
+							onkeydown="on_return()">
+						<span class="glyphicon glyphicon-user form-control-feedback"></span>
+					</div>
+					<div class="form-group has-feedback">
+						<input type="password" name='password' class="form-control" placeholder="密码" id="password"
+							onkeydown="on_return()">
+						<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+					</div>
+					<div class="row">
+
+
+						<div class="col-xs-12">
+							<button type="submit" class="btn btn-primary btn-block btn-flat"
+								onclick="postLoginRequest()"> GET IN !</button>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="social-auth-links text-center">
+
+				</div>
+
+				<a href="{% url 'blog:register_page' %}" class="text-center">NEW HERE? CLICK TO RESIST!</a>
+
+
+			</div>
+
+</form>
+
+		</div>
+
+
+
+
+		<!-- <script>
+			function postLoginRequest() {
+				console.log("login");
+				var e = $("#username").val(),
+					n = $("#password").val();
+				0 !== e.length ? 0 !== n.length ? $.ajax({
+					url: "/api/login/",
+					type: "POST",
+					data: JSON.stringify({
+						// action: "login",
+						username: e,
+						password: n,
+						'csrfmiddlewaretoken': csrf
+					}),
+					contentType: "application/json",
+					success: function() {
+						 window.location.href ="/index/";
+					},
+					/* success: function(e, n, t) {
+						window.location.href = "/blog/index.html";
+					}, */
+					error: function(e, n, t) {
+						alert("错误: " + e.status + t)
+					}
+				}) : alert("请输入密码") : alert("请输入用户名")
+			}
+
+			function curTimestamp() {
+				var e = (new Date).getTime();
+				return Math.floor(e / 1e3)
+			}
+			var lastSendReqTime = 0;
+
+			function on_return(e) {
+				if (13 == e) {
+					var n = curTimestamp();
+					if (n - window.lastSendReqTime < 5) return;
+					window.lastSendReqTime = n, postLoginRequest()
+				}
+			}
+			document.onkeydown = function(e) {
+				on_return(window.event ? window.event.keyCode : e.which)
+			}
+		</script> -->
+
+	</body>
+
+
+
+</html>

@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fabric = "*"
+coverage = "*"
+markdown = "*"
+gunicorn = "*"
+django-pure-pagination = "*"
+elasticsearch = ">=2,<3"
+django-haystack = "*"
+pytz = "==2020.1"
+pymysql = "==1.0.2"
+python-slugify = "==6.1.1"
+Django = "~=2.2"
+Faker = "*"
+uWSGI = "==2.0.18"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
